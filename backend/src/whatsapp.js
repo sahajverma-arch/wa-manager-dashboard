@@ -1,4 +1,5 @@
 const EventEmitter = require("events");
+const fs = require("fs");
 const QRCode = require("qrcode");
 const puppeteer = require("puppeteer");
 const { Client, LocalAuth } = require("whatsapp-web.js");
@@ -120,7 +121,7 @@ class WhatsAppManager extends EventEmitter {
 
     // eslint-disable-next-line no-console
     console.log(
-      `[whatsapp] renderMode=${this.renderMode} nodeEnv=${process.env.NODE_ENV || "undefined"} resolvedChromiumPath=${this.resolvedChromiumPath || "default"} localChromePath=${this.chromePath || "none"}`,
+      `[whatsapp] renderMode=${this.renderMode} nodeEnv=${process.env.NODE_ENV || "undefined"} resolvedChromiumPath=${this.resolvedChromiumPath || "default"} resolvedExists=${this.resolvedChromiumPath ? fs.existsSync(this.resolvedChromiumPath) : "n/a"} localChromePath=${this.chromePath || "none"}`,
     );
   }
 
@@ -252,7 +253,7 @@ class WhatsAppManager extends EventEmitter {
     try {
       // eslint-disable-next-line no-console
       console.log(
-        `[whatsapp] chromium launch start session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"}`,
+        `[whatsapp] chromium launch start session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"} exists=${this.resolvedChromiumPath ? fs.existsSync(this.resolvedChromiumPath) : "n/a"}`,
       );
       await client.initialize();
       // eslint-disable-next-line no-console
@@ -261,7 +262,7 @@ class WhatsAppManager extends EventEmitter {
       const readableError = formatError(error);
       // eslint-disable-next-line no-console
       console.error(
-        `[whatsapp] chromium launch failure session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"} error=${readableError}`,
+        `[whatsapp] chromium launch failure session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"} exists=${this.resolvedChromiumPath ? fs.existsSync(this.resolvedChromiumPath) : "n/a"} error=${readableError}`,
       );
       this.clients.delete(sessionName);
       this.states.set(sessionName, {

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "postinstall": "puppeteer browsers install chrome --path ./.cache/puppeteer",
     "test": "echo \"No tests configured\""
   },
   "keywords": [],
@@ -22,8 +23,5 @@
     "puppeteer": "^24.38.0",
     "socket.io": "^4.8.3",
     "whatsapp-web.js": "^1.34.7"
-  },
-  "puppeteer": {
-    "cacheDirectory": "./.cache/puppeteer"
   }
 }
