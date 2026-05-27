@@ -61,9 +61,7 @@ function formatError(error) {
 }
 
 const PORT = Number(process.env.PORT || 5000);
-const chromePath =
-  process.env.PUPPETEER_EXECUTABLE_PATH ||
-  path.join("C:", "Program Files", "Google", "Chrome", "Application", "chrome.exe");
+const chromePath = process.env.PUPPETEER_EXECUTABLE_PATH || null;
 const sessionDir =
   process.env.SESSION_DIR ||
   path.join(__dirname, "..", ".wwebjs_auth");

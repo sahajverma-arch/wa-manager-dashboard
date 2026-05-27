@@ -85,6 +85,10 @@ function buildActivitySummaries(messages) {
   return summaryBySession;
 }
 
+function isRenderDeployment() {
+  return process.env.RENDER === "true" || process.env.RENDER === "1";
+}
+
 class WhatsAppManager extends EventEmitter {
   constructor({ supabase, io, sessionDir, chromePath }) {
     super();
@@ -212,9 +216,9 @@ class WhatsAppManager extends EventEmitter {
         dataPath: this.sessionDir,
       }),
       puppeteer: {
-        headless: false,
-        executablePath: this.chromePath,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        headless: isRenderDeployment(),
+        ...(this.chromePath ? { executablePath: this.chromePath } : {}),
+        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
       },
     });
 
