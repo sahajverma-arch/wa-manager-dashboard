@@ -1,5 +1,6 @@
 const EventEmitter = require("events");
 const QRCode = require("qrcode");
+const puppeteer = require("puppeteer");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const {
   buildAnalytics,
@@ -89,6 +90,18 @@ function isRenderDeployment() {
   return process.env.RENDER === "true" || process.env.RENDER === "1";
 }
 
+function isProductionDeployment() {
+  return process.env.NODE_ENV === "production";
+}
+
+function resolveChromiumExecutablePath(localChromePath) {
+  if (isRenderDeployment() || isProductionDeployment()) {
+    return puppeteer.executablePath();
+  }
+
+  return localChromePath || null;
+}
+
 class WhatsAppManager extends EventEmitter {
   constructor({ supabase, io, sessionDir, chromePath }) {
     super();
@@ -96,8 +109,15 @@ class WhatsAppManager extends EventEmitter {
     this.io = io;
     this.sessionDir = sessionDir;
     this.chromePath = chromePath;
+    this.renderMode = isRenderDeployment() || isProductionDeployment();
+    this.resolvedChromiumPath = resolveChromiumExecutablePath(chromePath);
     this.clients = new Map();
     this.states = new Map();
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `[whatsapp] renderMode=${this.renderMode} nodeEnv=${process.env.NODE_ENV || "undefined"} chromiumPath=${this.resolvedChromiumPath || "default"} localChromePath=${this.chromePath || "none"}`,
+    );
   }
 
   getState(sessionName) {
@@ -216,8 +236,8 @@ class WhatsAppManager extends EventEmitter {
         dataPath: this.sessionDir,
       }),
       puppeteer: {
-        headless: isRenderDeployment(),
-        ...(this.chromePath ? { executablePath: this.chromePath } : {}),
+        headless: this.renderMode,
+        ...(this.resolvedChromiumPath ? { executablePath: this.resolvedChromiumPath } : {}),
         args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
       },
     });
