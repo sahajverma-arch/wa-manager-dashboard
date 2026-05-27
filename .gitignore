@@ -5,3 +5,4 @@ node_modules
 .wwebjs_cache
 dist
 coverage
+backend/.cache

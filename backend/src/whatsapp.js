@@ -95,11 +95,15 @@ function isProductionDeployment() {
 }
 
 function resolveChromiumExecutablePath(localChromePath) {
+  if (localChromePath) {
+    return localChromePath;
+  }
+
   if (isRenderDeployment() || isProductionDeployment()) {
     return puppeteer.executablePath();
   }
 
-  return localChromePath || null;
+  return null;
 }
 
 class WhatsAppManager extends EventEmitter {
@@ -116,7 +120,7 @@ class WhatsAppManager extends EventEmitter {
 
     // eslint-disable-next-line no-console
     console.log(
-      `[whatsapp] renderMode=${this.renderMode} nodeEnv=${process.env.NODE_ENV || "undefined"} chromiumPath=${this.resolvedChromiumPath || "default"} localChromePath=${this.chromePath || "none"}`,
+      `[whatsapp] renderMode=${this.renderMode} nodeEnv=${process.env.NODE_ENV || "undefined"} resolvedChromiumPath=${this.resolvedChromiumPath || "default"} localChromePath=${this.chromePath || "none"}`,
     );
   }
 
@@ -246,9 +250,19 @@ class WhatsAppManager extends EventEmitter {
     this.attachListeners(client, employee);
 
     try {
+      // eslint-disable-next-line no-console
+      console.log(
+        `[whatsapp] chromium launch start session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"}`,
+      );
       await client.initialize();
+      // eslint-disable-next-line no-console
+      console.log(`[whatsapp] chromium launch success session=${sessionName}`);
     } catch (error) {
       const readableError = formatError(error);
+      // eslint-disable-next-line no-console
+      console.error(
+        `[whatsapp] chromium launch failure session=${sessionName} renderMode=${this.renderMode} executablePath=${this.resolvedChromiumPath || "default"} error=${readableError}`,
+      );
       this.clients.delete(sessionName);
       this.states.set(sessionName, {
         status: "error",
