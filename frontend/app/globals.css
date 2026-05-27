@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --background: #05111d;
+  --foreground: #f1f7ff;
+  --panel: rgba(8, 18, 31, 0.76);
+  --panel-border: rgba(162, 188, 219, 0.16);
+  --muted: #8fa4bd;
+  --accent: #61f2b6;
+  --accent-2: #67a7ff;
+  --font-display: "Segoe UI Variable", "Aptos", "Trebuchet MS", "Avenir Next", sans-serif;
+  --font-mono-stack: "Cascadia Mono", "Consolas", "Liberation Mono", monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-display);
+  --font-mono: var(--font-mono-stack);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-display);
+  min-height: 100vh;
+  margin: 0;
+  background-image:
+    radial-gradient(circle at top left, rgba(103, 167, 255, 0.22), transparent 24%),
+    radial-gradient(circle at top right, rgba(97, 242, 182, 0.16), transparent 22%),
+    radial-gradient(circle at center bottom, rgba(142, 92, 255, 0.08), transparent 32%),
+    linear-gradient(180deg, #04101c 0%, #081625 55%, #05111d 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(97, 242, 182, 0.25);
+  color: var(--foreground);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+.float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.glass-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.mono {
+  font-family: var(--font-mono-stack);
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  border: 2px solid rgba(2, 6, 23, 0.35);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.42);
+}
